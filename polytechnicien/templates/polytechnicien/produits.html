@@ -1,0 +1,221 @@
+{% extends "polytechnicien/base.html" %}
+
+{% block title %}Produits - Artunis{% endblock %}
+
+{% block content %}
+ 
+<div style="background-color: #b1a19670; min-height: 100vh; padding: 20px;">
+
+<div class="row">
+    <!-- Sidebar: Catégories -->
+    <div class="col-md-3">
+        <h5 class="fw-bold">Catégories</h5>
+        <ul class="list-group">
+            <a href="{% url 'product_list_by_category' 'textile' %}" class="list-group-item {% if selected_category == 'Textile' %}active{% endif %}">Textiles et broderies</a>
+            <a href="{% url 'product_list_by_category' 'bijoux' %}" class="list-group-item {% if selected_category == 'Bijoux' %}active{% endif %}">Bijoux artisanaux</a>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold">Catégorie : {{ selected_category }}</h3>
+            
+            <!-- Search Bar Form -->
+            <form class="d-flex" method="GET" action="{% url 'produits' %}">
+                <input type="text" class="form-control" name="search" placeholder="Rechercher par nom" value="{{ request.GET.search }}">
+                <button class="btn btn-outline-dark" type="submit">Rechercher</button>
+            </form>
+
+            <!-- Add Product Button -->
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                Ajouter un produit
+            </button>
+        </div>
+
+        <!-- Affichage du message si aucun produit trouvé -->
+        {% if message %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 big-margin-bottom">
+            {% for produit in produits %}
+            <div class="col">
+                <div class="card h-100 border-success">
+                    <img src="{{ produit.image.url }}" class="card-img-top" alt="{{ produit.name }}">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ produit.name }}</h6>
+                        <p class="card-text fw-bold">{{ produit.price }} DT</p>
+                        <p class="card-text text-muted">Catégorie : {{ produit.get_category_display }}</p>
+                        {% if produit.category == 'bijoux' %}
+                <p class="card-text">Matériau : {{ produit.bijoux.material|default:"Non spécifié" }}</p>
+            {% elif produit.category == 'textile' %}
+                <p class="card-text">Type de Tissu : {{ produit.textile.fabric_type|default:"Non spécifié" }}</p>
+            {% endif %}
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal{{ produit.id }}">
+                                Voir plus
+                            </button>
+                            <form action="{% url 'delete_product' produit.id %}" method="POST" onsubmit="return confirm('Supprimer ce produit ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal for editing product -->
+                <div class="modal fade" id="editProductModal{{ produit.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ produit.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{% url 'update_product' produit.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProductModalLabel{{ produit.id }}">Modifier le produit</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nom</label>
+                                        <input type="text" name="nom" class="form-control" value="{{ produit.name }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Prix</label>
+                                        <input type="number" step="0.01" name="prix" class="form-control" value="{{ produit.price }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="description" class="form-control" required>{{ produit.description }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Catégorie</label>
+                                        <select name="categorie" class="form-select category-select" required data-modal-id="edit{{ produit.id }}">
+                                            <option value="textile" {% if produit.category == 'textile' %}selected{% endif %}>Textiles et broderies</option>
+                                            <option value="bijoux" {% if produit.category == 'bijoux' %}selected{% endif %}>Bijoux artisanaux</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Dynamically shown field for Textile -->
+                                    <div class="mb-3 dynamic-field edit{{ produit.id }}-textile" {% if produit.category != 'textile' %}style="display: none;"{% endif %}>
+                                        <label class="form-label">Type de Tissu</label>
+                                        <input type="text" name="fabric_type" class="form-control" value="{% if produit.category == 'textile' %}{{ produit.textile.fabric_type }}{% endif %}">
+                                    </div>
+                                    
+                                    <!-- Dynamically shown field for Bijoux -->
+                                    <div class="mb-3 dynamic-field edit{{ produit.id }}-bijoux" {% if produit.category != 'bijoux' %}style="display: none;"{% endif %}>
+                                        <label class="form-label">Matériau</label>
+                                        <input type="text" name="material" class="form-control" value="{% if produit.category == 'bijoux' %}{{ produit.bijoux.material }}{% endif %}">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Image actuelle</label><br>
+                                        <img src="{{ produit.image.url }}" alt="{{ produit.name }}" class="img-fluid mb-2" style="max-height: 150px;">
+                                        <input type="file" name="image" class="form-control mt-2" accept="image/*">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Enregistrer</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p>Aucun produit trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Product Form -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Ajouter un produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Nom du produit</label>
+                        <input type="text" class="form-control" id="productName" name="nom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Prix</label>
+                        <input type="number" step="0.01" class="form-control" id="productPrice" name="prix" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription" name="description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productCategory" class="form-label">Catégorie</label>
+                        <select class="form-select category-select" id="productCategory" name="categorie" required data-modal-id="add">
+                            <option value="textile">Textiles et broderies</option>
+                            <option value="bijoux">Bijoux artisanaux</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Dynamically shown field for Textile -->
+                    <div class="mb-3 dynamic-field add-textile">
+                        <label for="fabricType" class="form-label">Type de Tissu</label>
+                        <input type="text" class="form-control" id="fabricType" name="fabric_type">
+                    </div>
+                    
+                    <!-- Dynamically shown field for Bijoux -->
+                    <div class="mb-3 dynamic-field add-bijoux" style="display: none;">
+                        <label for="materialType" class="form-label">Matériau</label>
+                        <input type="text" class="form-control" id="materialType" name="material">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Image du produit</label>
+                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-outline-dark">Ajouter le produit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to toggle fields based on category
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all category selects
+        const categorySelects = document.querySelectorAll('.category-select');
+        
+        // For each select, add event listener to show/hide appropriate fields
+        categorySelects.forEach(select => {
+            // Initial setup
+            const modalId = select.getAttribute('data-modal-id');
+            toggleFields(select.value, modalId);
+            
+            // Add change event listener
+            select.addEventListener('change', function() {
+                toggleFields(this.value, modalId);
+            });
+        });
+        
+        function toggleFields(category, modalId) {
+            // Hide all dynamic fields for this modal first
+            document.querySelectorAll(`.dynamic-field[class*="${modalId}-"]`).forEach(field => {
+                field.style.display = 'none';
+            });
+            
+            // Show the relevant field based on category
+            const fieldToShow = document.querySelector(`.${modalId}-${category}`);
+            if (fieldToShow) {
+                fieldToShow.style.display = 'block';
+            }
+        }
+    });
+</script>
+ 
+</div>
+{% endblock %}
