@@ -11,7 +11,7 @@ def add_product(request):
         category = request.POST.get('categorie')
         image = request.FILES.get('image')
         
-        # Create the appropriate product type based on category
+
         if category == 'textile':
             fabric_type = request.POST.get('fabric_type', 'Standard')
             product = Textile.objects.create(
@@ -37,25 +37,24 @@ def add_product(request):
         return redirect('produits')
     return redirect('produits')
 
-def update_product(request, product_id):
+def update_product(request, id):
     if request.method == 'POST':
-        # Get the product
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=id)
         
-        # Update basic fields
+        #  basic
         product.name = request.POST.get('nom')
         product.price = request.POST.get('prix')
         product.description = request.POST.get('description')
         
-        # Check if category has changed
+        # ychecki category
         new_category = request.POST.get('categorie')
         category_changed = product.category != new_category
         
-        # Handle image update if provided
+        # ken image tbadlet
         if 'image' in request.FILES:
             product.image = request.FILES['image']
         
-        # If category changed, create new product of appropriate type
+        # ken category tbadlet
         if category_changed:
             # Create new product of appropriate type
             if new_category == 'textile':
@@ -108,7 +107,7 @@ def product_list(request, category=None):
         produits = Product.objects.all()
         selected_category = "Tous les produits"
     
-    # Apply search filter if provided
+
     if search_query:
         produits = produits.filter(name__icontains=search_query)
     
@@ -124,13 +123,9 @@ def product_list(request, category=None):
         'message': message,
     })
 
-# This function is no longer needed since we're using home_view instead
-# def homepage(request):
-#    return render(request, 'polytechnicien/home.html')
 
 def delete_product(request, id):
     try:
-        # Try to find the product in any of the product models
         try:
             produit = Product.objects.get(id=id)
         except Product.DoesNotExist:
@@ -146,14 +141,14 @@ def delete_product(request, id):
 
  
 
-# This function is now the main home view
-def home_view(request):
-    produits = Product.objects.all()  # Fetch all products
-    total_products = produits.count()  # Total number of products
-    total_textiles = produits.filter(category='textile').count()  # Total textile products
-    total_bijoux = produits.filter(category='bijoux').count()  # Total bijoux products
 
-    # Prepare context with the products and statistics
+def home_view(request):
+    produits = Product.objects.all() 
+    total_products = produits.count()  
+    total_textiles = produits.filter(category='textile').count()  
+    total_bijoux = produits.filter(category='bijoux').count()  
+
+    
     context = {
         'produits': produits,
         'total_products': total_products,
@@ -161,5 +156,8 @@ def home_view(request):
         'total_bijoux': total_bijoux,
     }
 
-    # Render the home.html page with the context data
+    
     return render(request, 'polytechnicien/home.html', context)
+
+def propos(request):
+    return render(request, 'polytechnicien/propos.html')

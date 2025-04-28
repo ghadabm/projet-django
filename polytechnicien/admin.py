@@ -5,7 +5,7 @@ from .models import Product, Textile, Bijoux
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'category', 'image']  # ✅ Ajout du champ image
+        fields = ['name', 'description', 'price', 'category', 'image']  
 
     def save(self, commit=True):
         product = super().save(commit=False)
@@ -14,18 +14,18 @@ class ProductForm(forms.ModelForm):
                 name=product.name,
                 description=product.description,
                 price=product.price,
-                image=product.image,  # ✅ Ajouté ici
-                material='Default Material'  # You can set this to be user-defined in a form
+                image=product.image, 
+                material='Default Material' 
             )
         elif product.category == 'textile':
             Textile.objects.create(
                 name=product.name,
                 description=product.description,
                 price=product.price,
-                image=product.image,  # ✅ Ajouté ici
-                fabric_type='Default Fabric'  # Again, you can make this user-defined
+                image=product.image,  
+                fabric_type='Default Fabric'  
             )
-        product.delete()  # After saving in the right category, delete the base product
+        product.delete()  
         return product
 
 class ProductAdmin(admin.ModelAdmin):

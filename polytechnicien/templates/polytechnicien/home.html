@@ -16,43 +16,43 @@
 {% block content %}
 <div class="container mt-5">
     <h3 class="text-center mb-4" style="color: rgb(107, 67, 45);">Statistiques</h3>
-
-
     <div class="row text-center" style="color: rgb(107, 67, 45);">
         <div class="col-md-4">
-            <div class="stats-box">
+            <div class="stats-box" style="border-color: rgb(107, 67, 45);">
                 <h4>Total des produits textiles</h4>
                 <p class="stats" style="color: rgb(107, 67, 45);">{{ total_textiles }}</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="stats-box">
+            <div class="stats-box" style="border-color: rgb(107, 67, 45);">
                 <h4>Total des produits</h4>
                 <p class="stats" style="color: rgb(107, 67, 45);">{{ total_products }}</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="stats-box">
+            <div class="stats-box" style="border-color: rgb(107, 67, 45);">
                 <h4>Total des produits de bijoux</h4>
                 <p class="stats" style="color: rgb(107, 67, 45);">{{ total_bijoux }}</p>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Latest Products Cards -->
+
     <h3 class="text-center mt-5">Derniers Produits</h3>
     <div class="row">
         {% for produit in produits %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-success">
-                    <img src="{{ produit.image.url }}" class="card-img-top" alt="{{ produit.name }}">
-                    <div class="card-body">
-                        <h6 class="card-title">{{ produit.name }}</h6>
-                    </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-success product-card">
+                <img src="{{ produit.image.url }}" class="card-img-top" alt="{{ produit.name }}">
+                <div class="card-body">
+                    <h6 class="card-title">{{ produit.name }}</h6>
                 </div>
             </div>
+        </div>
+ 
 
-            <!-- Modal for "Voir plus" -->
+   
             <div class="modal fade" id="editProductModal{{ produit.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ produit.id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -77,9 +77,13 @@
         {% endfor %}
     </div>
 
-    <!-- Big Background Image under Cards -->
-    <div class="mt-5">
-        <img src="{% static 'images/backFinal.PNG' %}" alt="Illustration Chiffres" class="img-fluid w-100" />
+
+    <div class="mt-5 position-relative">
+        <img src="{% static 'images/imageBack.JPG' %}" alt="Illustration Chiffres" class="img-fluid w-100" />
+        <div class="overlay-text">
+            <h2>Artunis</h2>
+            <p>We don't just sell products, we sell stories ... </p>
+        </div>
     </div>
 </div>
 {% endblock %}

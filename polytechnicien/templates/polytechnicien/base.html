@@ -51,13 +51,39 @@
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
             text-align: left;
         }
+ 
+        .overlay-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.overlay-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.overlay-text p {
+    font-size: 1.2rem;
+    max-width: 90%;
+}
         
 
         .hero-text h1 {
             font-size: 3rem;
         }
+ 
         .big-margin-bottom {
-    margin-bottom: 100px; /* or any size you want */
+    margin-bottom: 100px; 
 }
 
 
@@ -80,21 +106,21 @@
             color: #000;
         }
         .bg-brown {
-        background-color: #6F4F37;  /* Brown color code */
+        background-color: #6F4F37;  
     }
         footer {
             position: fixed;
             left: 0;
             bottom: 0;
             width: 100%;
-            background-color: #6F4F37; /* Brown color */
+            background-color: #6F4F37; 
             color: white;
             text-align: center;
             padding: 10px 0;
             z-index: 999;
         }
         .list-group-item.active {
-        background-color: #8B4513 !important; /* Brun */
+        background-color: #8B4513 !important; 
         border-color: #8B4513 !important;
         color: white !important;
     }
@@ -114,13 +140,48 @@
     color: #007bff;
     transition: all 0.3s ease-in-out;
 }
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    transform-origin: center;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+
+.product-card img {
+    transition: all 0.3s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.02);
+}
+.stats-box {
+    border: 2px solid rgb(107, 67, 45);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.stats {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: rgb(107, 67, 45); 
+    transition: all 0.3s ease-in-out;
+}
     
 
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
@@ -136,15 +197,15 @@
     </div>
 </nav>
 
-<!-- Hero Section: visible seulement sur la page d'accueil -->
+
 {% block hero %}{% endblock %}
 
-<!-- Contenu Principal -->
+
 <main class="container mt-4">
     {% block content %}{% endblock %}
 </main>
 
-<!-- Footer -->
+
 <footer class="bg-brown text-white text-center py-3 mt-5">
     <p>&copy; 2025 Artunis. Ghada Ben Mansour.</p>
 </footer>

@@ -1,0 +1,75 @@
+{% extends "polytechnicien/base.html" %}
+
+{% load static %}
+
+{% block title %}À propos de nous - Polytec App{% endblock %}
+
+{% block hero %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">À Propos Du Proprietaire</h1>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <img src="{% static 'images/queen.jpeg' %}" alt="Notre équipe" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/600x400?text=Notre+Équipe'">
+                <div class="card-body" style="background-color: #e0d1c6;">
+                    <h5 class="card-title">Ghada Ben Mansour</h5>
+                    <p class="card-text text-muted">Artisane & fondatrice d'une marque engagée</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="p-4 rounded shadow-sm" style="background-color: #e0d1c6;">
+                <h3 class="mb-4">Ghada Ben Mansour : Fondatrice</h3>
+                <p>
+                    Je mets en lumière l'artisanat local à travers une sélection unique de produits faits main. Fondé en 2025, ce projet est né de ma passion pour les créations artisanales et de mon désir de soutenir les artisans talentueux.
+                </p>
+                <p>
+                    Chaque pièce que je propose est soigneusement choisie pour son authenticité, son savoir-faire et son histoire. Qu'il s'agisse de poteries, de textiles, d'accessoires ou de décorations, tous nos produits reflètent l'âme et le travail minutieux de leurs créateurs.
+                </p>
+                <p>
+                    Ce qui me tient à cœur, c'est de créer un lien entre les artisans et les amateurs d'artisanat, en offrant des pièces uniques qui embellissent le quotidien. Je crois en une consommation responsable, où chaque acheté contribue à préserver des traditions et à soutenir des talents locaux.
+                </p>
+                
+                <div class="mt-4">
+                    <h4>Mes valeurs</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="background-color: #e6d7cc;">Créativité</li>
+                        <li class="list-group-item" style="background-color: #e6d7cc;">Originalité</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--  statistiques -->
+    <div class="row mt-5 big-margin-bottom">
+        <h3 class="text-center mb-4">Artunis en chiffres</h3>
+        
+        <div class="col-md-4">
+            <div class="stats-box text-center">
+                <span class="stats">25+</span>
+                <p class="mt-2">Professionnels passionnés</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-box text-center">
+                <span class="stats">150+</span>
+                <p class="mt-2">Projets réalisés</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-box text-center">
+                <span class="stats">12</span>
+                <p class="mt-2">Pays couverts</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

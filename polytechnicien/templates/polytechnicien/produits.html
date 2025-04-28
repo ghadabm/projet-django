@@ -4,10 +4,8 @@
 
 {% block content %}
  
-<div style="background-color: #b1a19670; min-height: 100vh; padding: 20px;">
-
 <div class="row">
-    <!-- Sidebar: Catégories -->
+
     <div class="col-md-3">
         <h5 class="fw-bold">Catégories</h5>
         <ul class="list-group">
@@ -16,24 +14,20 @@
         </ul>
     </div>
 
-    <!-- Main Content Area -->
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold">Catégorie : {{ selected_category }}</h3>
-            
-            <!-- Search Bar Form -->
+
             <form class="d-flex" method="GET" action="{% url 'produits' %}">
                 <input type="text" class="form-control" name="search" placeholder="Rechercher par nom" value="{{ request.GET.search }}">
                 <button class="btn btn-outline-dark" type="submit">Rechercher</button>
             </form>
 
-            <!-- Add Product Button -->
             <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addProductModal">
                 Ajouter un produit
             </button>
         </div>
 
-        <!-- Affichage du message si aucun produit trouvé -->
         {% if message %}
             <div class="alert alert-warning" role="alert">
                 {{ message }}
@@ -65,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Modal for editing product -->
+                <!-- r editing product -->
                 <div class="modal fade" id="editProductModal{{ produit.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ produit.id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -96,13 +90,12 @@
                                         </select>
                                     </div>
                                     
-                                    <!-- Dynamically shown field for Textile -->
+                                    <!-- Dynamic -->
                                     <div class="mb-3 dynamic-field edit{{ produit.id }}-textile" {% if produit.category != 'textile' %}style="display: none;"{% endif %}>
                                         <label class="form-label">Type de Tissu</label>
                                         <input type="text" name="fabric_type" class="form-control" value="{% if produit.category == 'textile' %}{{ produit.textile.fabric_type }}{% endif %}">
                                     </div>
                                     
-                                    <!-- Dynamically shown field for Bijoux -->
                                     <div class="mb-3 dynamic-field edit{{ produit.id }}-bijoux" {% if produit.category != 'bijoux' %}style="display: none;"{% endif %}>
                                         <label class="form-label">Matériau</label>
                                         <input type="text" name="material" class="form-control" value="{% if produit.category == 'bijoux' %}{{ produit.bijoux.material }}{% endif %}">
@@ -130,7 +123,7 @@
     </div>
 </div>
 
-<!-- Modal: Add Product Form -->
+<!--Add  -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -161,13 +154,12 @@
                         </select>
                     </div>
                     
-                    <!-- Dynamically shown field for Textile -->
+                    <!-- Dynamic -->
                     <div class="mb-3 dynamic-field add-textile">
                         <label for="fabricType" class="form-label">Type de Tissu</label>
                         <input type="text" class="form-control" id="fabricType" name="fabric_type">
                     </div>
                     
-                    <!-- Dynamically shown field for Bijoux -->
                     <div class="mb-3 dynamic-field add-bijoux" style="display: none;">
                         <label for="materialType" class="form-label">Matériau</label>
                         <input type="text" class="form-control" id="materialType" name="material">
@@ -185,30 +177,23 @@
 </div>
 
 <script>
-    // Function to toggle fields based on category
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize all category selects
         const categorySelects = document.querySelectorAll('.category-select');
         
-        // For each select, add event listener to show/hide appropriate fields
         categorySelects.forEach(select => {
-            // Initial setup
             const modalId = select.getAttribute('data-modal-id');
             toggleFields(select.value, modalId);
             
-            // Add change event listener
             select.addEventListener('change', function() {
                 toggleFields(this.value, modalId);
             });
         });
         
         function toggleFields(category, modalId) {
-            // Hide all dynamic fields for this modal first
             document.querySelectorAll(`.dynamic-field[class*="${modalId}-"]`).forEach(field => {
                 field.style.display = 'none';
             });
             
-            // Show the relevant field based on category
             const fieldToShow = document.querySelector(`.${modalId}-${category}`);
             if (fieldToShow) {
                 fieldToShow.style.display = 'block';
